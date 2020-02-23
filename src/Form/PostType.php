@@ -13,10 +13,7 @@ class PostType extends AbstractType
     {
         $builder
             ->add('title')
-            ->add('createdTime')
-            ->add('editedTime')
             ->add('content')
-            ->add('user')
         ;
     }
 
