@@ -9,11 +9,16 @@
 import '../css/app.css';
 import '../css/global.scss';
 
-const $ = require('jquery');
+let $ = require('jquery');
+window.jQuery = $;
+require("bootstrap-tagsinput");
 require('bootstrap');
+$ = window.jQuery;
 
 
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
 // import $ from 'jquery';
 
 console.log('Hello Webpack Encore! Edit me in assets/js/app.js');
+
+$('.tag-input').tagsinput();

@@ -51,7 +51,7 @@ class DefaultController extends AbstractController
             $entityManager->persist($task);
             $entityManager->flush();
 
-            return $this->redirectToRoute('task_success');
+            return $this->redirectToRoute('readPost', ["id" => $task->getId()]);
         }
 
         return $this->render('default/createPost.html.twig', [

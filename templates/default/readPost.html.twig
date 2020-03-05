@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Read Post{% endblock %}
+
+{% block body %}
+    <h1>Read Post</h1>
+
+    <div>
+        <h2>Title: {{ post.title }}</h2>
+        <p>Content: {{ post.content }}</p>
+
+        <br>
+        <p>Tags: {{ post.tag | join(', ') }}</p>
+    </div>
+{% endblock %}
