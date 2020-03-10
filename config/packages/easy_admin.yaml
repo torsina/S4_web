@@ -1,6 +1,28 @@
-#easy_admin:
-#    entities:
-#        # List the entity class name you want to manage
-#        - App\Entity\Product
-#        - App\Entity\Category
-#        - App\Entity\User
+easy_admin:
+  entities:
+    # List the entity class name you want to manage
+    Comment:
+        class: App\Entity\Comment
+    Post:
+        class: App\Entity\Post
+    Tag:
+        class: App\Entity\Tag
+    Attachment:
+        class: App\Entity\Attachment
+        list:
+          fields:
+            - { label: 'image', property: 'imageName', type: 'image', base_path: 'images/attachments' }
+        show:
+          fields:
+            - { label: 'image', property: 'imageName', type: 'image', base_path: 'images/attachments' }
+        form:
+          fields:
+            - { label: 'image', property: 'imageFile', type: 'vich_image', upload_dir: '%app.path.attachments_image%' }
+    User:
+        class: App\Entity\User
+        controller: App\Controller\AdminUserController
+        form:
+          fields:
+            - { property: 'username' }
+            - { label: 'password', property: 'plainPassword', type: 'password' }
+

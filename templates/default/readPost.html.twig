@@ -11,5 +11,6 @@
 
         <br>
         <p>Tags: {{ post.tag | join(', ') }}</p>
+        <img src="{{ vich_uploader_asset(post.image) }}" alt="{{ post.image.imageName }}">
     </div>
 {% endblock %}

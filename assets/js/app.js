@@ -6,14 +6,27 @@
  */
 
 // any CSS you import will output into a single css file (app.css in this case)
-import '../css/app.css';
-import '../css/global.scss';
+
 
 let $ = require('jquery');
 window.jQuery = $;
 require("bootstrap-tagsinput");
+require('flexslider');
+
+require('./doubletaptogo');
 require('bootstrap');
+
+require("./init");
 $ = window.jQuery;
+
+import '../css/app.css';
+
+import '../css/default.css'
+import '../css/layout.css'
+import '../css/media-queries.css'
+
+import '../css/global.scss';
+
 
 
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.

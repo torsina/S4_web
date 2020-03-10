@@ -4,8 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Post;
 use App\Form\PostType;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Security\Core\Security;
@@ -26,18 +29,29 @@ class DefaultController extends AbstractController
      */
     public function index()
     {
-        return $this->render('default/index.html.twig', [
-            'controller_name' => 'DefaultController',
+        $latestPosts = $this
+            ->getDoctrine()
+            ->getRepository(Post::class)
+            ->findBy([
+            ], ['createdTime' => 'DESC'], 4);
+        return $this->render('sparrow/index.html.twig', [
+            'latestPosts' => $latestPosts
         ]);
     }
 
     /**
      * @Route("/post/create", name="createPost")
+     * @param Request $request
+     * @return RedirectResponse|Response
+     * @throws Exception
      */
     public function createPost(Request $request)
     {
         $post = new Post();
-        $post->setCreatedTime(new \DateTime())->setEditedTime(new \DateTime())->setUser($this->security->getUser());
+        $post
+            ->setCreatedTime(new \DateTime())
+            ->setEditedTime(new \DateTime())
+            ->setUser($this->security->getUser());
         $form = $this->createForm(PostType::class, $post);
 
         $form->handleRequest($request);
@@ -45,7 +59,6 @@ class DefaultController extends AbstractController
             // $form->getData() holds the submitted values
             // but, the original `$task` variable has also been updated
             $task = $form->getData();
-
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($task);
@@ -61,8 +74,15 @@ class DefaultController extends AbstractController
 
     /**
      * @Route("/post/{id}", name="readPost")
+     * @param Post $post
+     * @return Response
      */
     public function readPost(Post $post) {
+
+        $post->addViews(1);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($post);
+        $entityManager->flush();
         return $this->render('default/readPost.html.twig', [
             'post' => $post,
         ]);

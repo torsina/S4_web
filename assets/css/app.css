@@ -10,3 +10,7 @@ span.tag.label.label-info {
 span.tag.label.label-info > span {
     width: 20px;
 }
+
+.my-container {
+    padding: 0 25vw;
+}

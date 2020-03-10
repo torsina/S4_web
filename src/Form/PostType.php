@@ -19,6 +19,7 @@ class PostType extends AbstractType
             ->add('content')
             ->add('tag', TagsType::class)
             ->add('submit', SubmitType::class)
+            ->add('image', AttachmentType::class)
         ;
     }
 

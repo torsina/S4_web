@@ -5,6 +5,8 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -54,7 +56,18 @@ class Post
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="post", orphanRemoval=true)
      */
-    private $comments;
+    private $comments ;
+
+    /**
+     * @ORM\Column(type="bigint")
+     */
+    private $views = 0;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Attachment", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $image;
 
     public function __construct()
     {
@@ -139,6 +152,7 @@ class Post
     {
         if (!$this->tag->contains($tag)) {
             $this->tag[] = $tag;
+            $this->editedTime = new \DateTimeImmutable();
         }
 
         return $this;
@@ -148,6 +162,7 @@ class Post
     {
         if ($this->tag->contains($tag)) {
             $this->tag->removeElement($tag);
+            $this->editedTime = new \DateTimeImmutable();
         }
 
         return $this;
@@ -182,5 +197,40 @@ class Post
         }
 
         return $this;
+    }
+
+    public function getViews(): ?string
+    {
+        return $this->views;
+    }
+
+    public function setViews(string $views): self
+    {
+        $this->views = $views;
+
+        return $this;
+    }
+
+    public function addViews(int $amount): self
+    {
+        $this->views += $amount;
+        return $this;
+    }
+
+    public function getImage(): ?Attachment
+    {
+        return $this->image;
+    }
+
+    public function setImage(Attachment $image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->getTitle();
     }
 }
