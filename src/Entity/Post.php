@@ -69,6 +69,11 @@ class Post
      */
     private $image;
 
+    /**
+     * @ORM\Column(type="string", length=512)
+     */
+    private $description;
+
     public function __construct()
     {
         $this->tag = new ArrayCollection();
@@ -224,6 +229,7 @@ class Post
 
     public function setImage(Attachment $image): self
     {
+        if(!$image->isUsed())$image->setUsedAs("post_image");
         $this->image = $image;
 
         return $this;
@@ -232,5 +238,17 @@ class Post
     public function __toString()
     {
         return $this->getTitle();
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
     }
 }

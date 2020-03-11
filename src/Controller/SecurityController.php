@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Attachment;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\LoginAuthenticator;
@@ -45,6 +46,8 @@ class SecurityController extends AbstractController
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, LoginAuthenticator $authenticator): Response
     {
+        $entityManager = $this->getDoctrine()->getManager();
+
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
@@ -57,6 +60,13 @@ class SecurityController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
+            if(!$user->getProfilePicture()) {
+                $defaultImage = $this
+                    ->getDoctrine()
+                    ->getRepository(Attachment::class)
+                    ->getDefaultUserProfilePicture();
+                $user->setProfilePicture($defaultImage);
+            }
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);

@@ -52,6 +52,18 @@ class User implements UserInterface
      */
     private $comments;
 
+    /**
+     * @ORM\Column(type="string", length=2048, nullable=true)
+     */
+    private $banner;
+
+    // set default to 1 as the first attachment will be the image from the datafixture
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Attachment", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $profilePicture;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
@@ -212,5 +224,30 @@ class User implements UserInterface
     public function __toString()
     {
         return $this->getUsername();
+    }
+
+    public function getBanner(): ?string
+    {
+        return $this->banner;
+    }
+
+    public function setBanner(?string $banner): self
+    {
+        $this->banner = $banner;
+
+        return $this;
+    }
+
+    public function getProfilePicture(): ?Attachment
+    {
+        return $this->profilePicture;
+    }
+
+    public function setProfilePicture(Attachment $profilePicture): self
+    {
+        if(!$profilePicture->isUsed())$profilePicture->setUsedAs("user_profile");
+        $this->profilePicture = $profilePicture;
+
+        return $this;
     }
 }

@@ -36,6 +36,10 @@ class AttachmentRepository extends ServiceEntityRepository
     }
     */
 
+    public function getDefaultUserProfilePicture() {
+        return $this->findOneBy(['usedAs' => 'user_profile_default']);
+    }
+
     /*
     public function findOneBySomeField($value): ?Attachment
     {

@@ -35,6 +35,7 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
+            ->add('profilePicture', AttachmentType::class, ['required' => false])
             ->add('submit', SubmitType::class)
         ;
     }

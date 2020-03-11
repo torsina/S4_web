@@ -83,7 +83,7 @@ class DefaultController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($post);
         $entityManager->flush();
-        return $this->render('default/readPost.html.twig', [
+        return $this->render('sparrow/post.html.twig', [
             'post' => $post,
         ]);
     }

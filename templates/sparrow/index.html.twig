@@ -55,19 +55,36 @@
         <div id="intro-slider" class="flexslider">
 
             <ul class="slides">
-
+                {% for post in latestPosts %}
+                    <!-- Slide -->
+                    <li>
+                        <div class="row">
+                            <div class="twelve columns">
+                                <div class="slider-text">
+                                    <h1>{{ post.title }}<span>.</span></h1>
+                                    <p>{{ post.content}}</p>
+                                </div>
+                                <div class="slider-image">
+                                    <img src="{{ vich_uploader_asset(post.image) }}" alt=""/>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
                 <!-- Slide -->
                 <li>
                     <div class="row">
                         <div class="twelve columns">
                             <div class="slider-text">
                                 <h1>Free amazing site template<span>.</span></h1>
-                                <p>Aenean condimentum, lacus sit amet luctus lobortis, dolores et quas molestias excepturi
-                                    enim tellus ultrices elit, amet consequat enim elit noneas sit amet luctu. lacus sit amet luctus lobortis, dolores et quas molestias excepturi
+                                <p>Aenean condimentum, lacus sit amet luctus lobortis, dolores et quas molestias
+                                    excepturi
+                                    enim tellus ultrices elit, amet consequat enim elit noneas sit amet luctu. lacus sit
+                                    amet luctus lobortis, dolores et quas molestias excepturi
                                     enim tellus ultrices elit.</p>
                             </div>
                             <div class="slider-image">
-                                <img src="{{ asset('build/images/sliders/home-slider-image-01.png') }}" alt="" />
+                                <img src="{{ asset('build/images/sliders/home-slider-image-01.png') }}" alt=""/>
                             </div>
                         </div>
                     </div>
@@ -79,12 +96,14 @@
                         <div class="twelve columns">
                             <div class="slider-text">
                                 <h1>Responsive + HTML5 + CSS3<span>.</span></h1>
-                                <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
-                                    deleniti eos et accusamus. amet consequat enim elit noneas sit amet luctu. lacus sit amet luctus lobortis.
+                                <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium
+                                    voluptatum
+                                    deleniti eos et accusamus. amet consequat enim elit noneas sit amet luctu. lacus sit
+                                    amet luctus lobortis.
                                     Aenean condimentum, lacus sit amet luctus.</p>
                             </div>
                             <div class="slider-image">
-                                <img src="{{ asset('build/images/sliders/home-slider-image-02.png') }}" alt="" />
+                                <img src="{{ asset('build/images/sliders/home-slider-image-02.png') }}" alt=""/>
                             </div>
                         </div>
                     </div>
@@ -164,9 +183,9 @@
                             <div class="portfolio-item-meta">
                                 <h5><a href="{{ path('readPost', {id: post.id }) }}">{{ post.title }}</a></h5>
                                 <p>
-                                {% for tag in post.tag %}
-                                    {{ tag }},
-                                {% endfor %}
+                                    {% for tag in post.tag %}
+                                        {{ tag }},
+                                    {% endfor %}
                                 </p>
                             </div>
                         </div>
@@ -192,143 +211,44 @@
         <div class="blog-entries">
             {% for post in latestPosts %}
                 <!-- Entry -->
-                <article class="row entry">
-
-                    <div class="entry-header">
-
-                        <div class="permalink">
-                            <a href="{{ path('readPost', {id: post.id }) }}"><i class="fa fa-link"></i></a>
+                <article class="entry">
+                    <div class="row entry-header">
+                        <div class="col">
+                            <div class="post-meta end">
+                                <p>
+                                    <time datetime="{{ post.createdTime | format_datetime('short', 'none') }}"
+                                          class="post-date">
+                                        {{ post.createdTime | format_datetime('full', 'short') }}
+                                    </time>
+                                    <span class="dauthor">By Sakura Haruno</span>
+                                </p>
+                            </div>
                         </div>
-                        <div class="entry-title pull-right">
-                            <h3><a href="{{ path('readPost', {id: post.id }) }}">{{ post.title }}</a></h3>
+                        <div class="col-8">
+                            <div class="">
+                                <h3><a href="{{ path('readPost', {id: post.id }) }}">{{ post.title }}</a></h3>
+                                <div class="post-content">
+                                    <p>
+                                        {{ post.content }}
+                                        <a class="more-link" href="{{ path('readPost', {id: post.id }) }}">
+                                            Read More
+                                            <i class="fa fa-arrow-circle-o-right"></i>
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="post-meta end">
-                            <p>
-                                <time datetime="{{ post.createdTime | format_datetime('short', 'none') }}" class="post-date" pubdate="">{{ post.createdTime | format_datetime('full', 'short', locale='fr') }}</time>
-                                <span class="dauthor">By Sakura Haruno</span>
-                            </p>
+                        <div class="col">
+                            <div class="permalink">
+                                <a href="{{ path('readPost', {id: post.id }) }}"><i class="fa fa-link"></i></a>
+                            </div>
                         </div>
-
-
-
-
-                    </div>
-
-                    <div class="ten columns offset-2 post-content">
-                        <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
-                            deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate.
-                            At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium.
-                            <a class="more-link" href="{{ path('readPost', {id: post.id }) }}">Read More<i class="fa fa-arrow-circle-o-right"></i></a></p>
                     </div>
 
                 </article> <!-- Entry End -->
             {% endfor %}
-
-
-            <!-- Entry -->
-            <article class="row entry">
-
-                <div class="entry-header">
-
-                    <div class="permalink">
-                        <a href="single.html"><i class="fa fa-link"></i></a>
-                    </div>
-
-                    <div class="ten columns entry-title pull-right">
-                        <h3><a href="single.html">Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit sed.</a></h3>
-                    </div>
-
-                    <div class="two columns post-meta end">
-                        <p>
-                            <time datetime="2014-01-29" class="post-date" pubdate="">Jan 30, 2014</time>
-                            <span class="dauthor">By John Doe</span>
-                        </p>
-                    </div>
-
-                </div>
-
-                <div class="ten columns offset-2 post-content">
-                    <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
-                        deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate.
-                        At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium.
-                        <a class="more-link" href="single.html">Read More<i class="fa fa-arrow-circle-o-right"></i></a></p>
-                </div>
-
-            </article> <!-- Entry End -->
-
-            <!-- Entry -->
-            <article class="row entry">
-
-                <div class="entry-header">
-
-                    <div class="permalink">
-                        <a href="single.html"><i class="fa fa-link"></i></a>
-                    </div>
-
-                    <div class="ten columns entry-title pull-right">
-                        <h3><a href="blog-single.html">Quis autem vel esse eum iure reprehenderit qui in ea voluptate velit esse.</a></h3>
-                    </div>
-
-                    <div class="two columns post-meta end">
-                        <p>
-                            <time datetime="2014-01-28" class="post-date" pubdate="">Jan 28, 2014</time>
-                            <span class="dauthor">By Naruto Uzumaki</span>
-                        </p>
-                    </div>
-
-                </div>
-
-                <div class="ten columns offset-2 post-content">
-                    <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
-                        deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate.
-                        At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium.
-                        <a class="more-link" href="single.html">Read More<i class="fa fa-arrow-circle-o-right"></i></a></p>
-                </div>
-
-            </article> <!-- Entry End -->
-
         </div> <!-- Entries End -->
-
     </section> <!-- Journal Section End-->
-
-    <!-- Tweets Section
-    ================================================== -->
-    <section id="tweets">
-
-        <div class="row">
-
-            <div class="tweeter-icon align-center">
-                <i class="fa fa-twitter"></i>
-            </div>
-
-            <ul id="twitter" class="align-center">
-                <li>
-               <span>
-               This is Photoshop's version  of Lorem Ipsum. Proin gravida nibh vel velit auctor aliquet.
-               Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum
-               <a href="#">http://t.co/CGIrdxIlI3</a>
-               </span>
-                    <b><a href="#">2 Days Ago</a></b>
-                </li>
-                <!--
-                <li>
-                   <span>
-                   This is Photoshop's version  of Lorem Ipsum. Proin gravida nibh vel velit auctor aliquet.
-                   Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum
-                   <a href="#">http://t.co/CGIrdxIlI3</a>
-                   </span>
-                   <b><a href="#">3 Days Ago</a></b>
-                </li>
-                -->
-            </ul>
-
-            <p class="align-center"><a href="#" class="button">Follow us</a></p>
-
-        </div>
-
-    </section> <!-- Tweet Section End-->
-
-
 
     <!-- footer
     ================================================== -->
