@@ -1,5 +1,7 @@
 # S4 Framework project Aelis Sagot
 
+repo github: https://github.com/torsina/S4_web
+
 ## INSTALLATION
 
 Les datafixtures doivent être utilisées pour rendre le projet fonctionnel!
