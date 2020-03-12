@@ -16,10 +16,11 @@ class PostType extends AbstractType
     {
         $builder
             ->add('title')
+            ->add('description')
             ->add('content')
             ->add('tag', TagsType::class)
             ->add('submit', SubmitType::class)
-            ->add('image', AttachmentType::class)
+            ->add('image', AttachmentType::class, ["label" => " "])
         ;
     }
 

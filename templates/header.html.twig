@@ -1,0 +1,46 @@
+<header>
+
+    <div class="row">
+
+        <div class="twelve columns">
+
+            <div class="logo">
+                <a href="index.html"><img alt="" src="images/logo.png"></a>
+            </div>
+
+            <nav id="nav-wrap">
+
+                <a class="mobile-btn" href="#nav-wrap" title="Show navigation">Show navigation</a>
+                <a class="mobile-btn" href="#" title="Hide navigation">Hide navigation</a>
+
+                <ul id="nav" class="nav">
+
+                    <li><a href="{{ path("index") }}">Home</a></li>
+                    <li class="current"><span><a href="{{ path("postPage", {'page': 1}) }}">Blog</a></span>
+                        <ul>
+                            <li><a href="{{ path("postPage", {'page': 1}) }}">Browse</a></li>
+                            <li><a href="{{ path('createPost') }}">Create a post</a></li>
+                        </ul>
+                    </li>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li><a href="{{ path("easyadmin") }}">EasyAdmin</a></li>
+                    {% endif %}
+                    <li><a href="{{ path("api_entrypoint") }}">ApiPlatform</a></li>
+                    {% if user is defined and user is not null %}
+                        <li>><a href="">{{ user.username }}</a></li>
+                        <li><a href="{{ path('app_logout')}}">Logout</a></li>
+                    {% else %}
+                        <li><a href="{{ path('app_login')}}">Sign in</a></li>
+                        <li><a href="{{ path('app_register')}}">Sign up</a></li>
+                    {% endif %}
+
+
+                </ul> <!-- end #nav -->
+
+            </nav> <!-- end #nav-wrap -->
+
+        </div>
+
+    </div>
+
+</header> <!-- Header End -->

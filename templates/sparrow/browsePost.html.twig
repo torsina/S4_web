@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Browse posts{% endblock %}
+
+{% block body %}
+
+    <!-- Journal Section
+    ================================================== -->
+    <section id="journal">
+
+        <div class="row">
+            <div class="twelve columns align-center">
+                <h1>Our latest posts and rants.</h1>
+            </div>
+        </div>
+
+        <div class="blog-entries">
+            {% for post in posts %}
+                <!-- Entry -->
+                <article class="entry">
+                    <div class="row entry-header">
+                        <div class="col">
+                            <div class="post-meta end">
+                                <p>
+                                    <time datetime="{{ post.createdTime | format_datetime('short', 'none') }}"
+                                          class="post-date">
+                                        {{ post.createdTime | format_datetime('full', 'short') }}
+                                    </time>
+                                    <span class="dauthor">By {{ post.user.username }}</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-8">
+                            <div class="">
+                                <h3><a href="{{ path('readPost', {id: post.id }) }}">{{ post.title }}</a></h3>
+                                <div class="post-content">
+                                    <p>
+                                        {{ post.description }}
+                                        <a class="more-link" href="{{ path('readPost', {id: post.id }) }}">
+                                            Read More
+                                            <i class="fa fa-arrow-circle-o-right"></i>
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="permalink">
+                                <a href="{{ path('readPost', {id: post.id }) }}"><i class="fa fa-link"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                </article> <!-- Entry End -->
+            {% endfor %}
+
+            <div class="row add-bottom">
+
+                <div class="twelve columns add-bottom">
+                    <nav class="pagination add-bottom">
+
+                        {% set pagePrev = (pageNumber == 1) ? 1 : pageNumber - 1 %}
+                        {% set pageNext = (pageNumber == pageCount) ? pageCount : pageNumber + 1 %}
+                        <a class="page-numbers prev inactive" href="{{ path("postPage", {'page': pagePrev}) }}">Prev</a>
+
+                        {% for i in 1..pageCount %}
+                            {% if i == pageNumber %}
+                                <span class="page-numbers current">{{ i }}</span>
+                            {% else %}
+                                <a href="{{ path("postPage", {'page': i}) }}" class="page-numbers">{{ i }}</a>
+                            {% endif %}
+                        {% endfor %}
+
+                        <a href="{{ path("postPage", {'page': pageNext}) }}" class="page-numbers next" >Next</a>
+
+                    </nav>
+
+                </div>
+            </div>
+        </div> <!-- Entries End -->
+    </section> <!-- Journal Section End-->
+{% endblock %}

@@ -3,8 +3,8 @@ body {
 }
 
 
-span.tag.label.label-info {
-    background-color: black;
+.tagcloud > div > div > input {
+    width: 100%;
 }
 
 span.tag.label.label-info > span {

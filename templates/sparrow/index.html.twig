@@ -3,49 +3,6 @@
 {% block title %}Index{% endblock %}
 
 {% block body %}
-    <header>
-
-        <div class="row">
-
-            <div class="twelve columns">
-
-                <div class="logo">
-                    <a href="index.html"><img alt="" src="{{ asset('build/images/logo.png') }}"></a>
-                </div>
-
-                <nav id="nav-wrap">
-
-                    <a class="mobile-btn" href="#nav-wrap" title="Show navigation">Show navigation</a>
-                    <a class="mobile-btn" href="#" title="Hide navigation">Hide navigation</a>
-
-                    <ul id="nav" class="nav">
-
-                        <li class="current"><a href="index.htm">Home</a></li>
-                        <li><span><a href="blog.html">Blog</a></span>
-                            <ul>
-                                <li><a href="blog.html">Blog Index</a></li>
-                                <li><a href="single.html">Post</a></li>
-                            </ul>
-                        </li>
-                        <li><span><a href="portfolio-index.html">Portfolio</a></span>
-                            <ul>
-                                <li><a href="portfolio-index.html">Portfolio Index</a></li>
-                                <li><a href="portfolio.html">Portfolio Entry</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="about.html">About</a></li>
-                        <li><a href="contact.html">Contact</a></li>
-                        <li><a href="styles.html">Features</a></li>
-
-                    </ul> <!-- end #nav -->
-
-                </nav> <!-- end #nav-wrap -->
-
-            </div>
-
-        </div>
-
-    </header> <!-- Header End -->
 
     <!-- Intro Section
     ================================================== -->
@@ -220,7 +177,7 @@
                                           class="post-date">
                                         {{ post.createdTime | format_datetime('full', 'short') }}
                                     </time>
-                                    <span class="dauthor">By Sakura Haruno</span>
+                                    <span class="dauthor">By {{ post.user.username }}</span>
                                 </p>
                             </div>
                         </div>
@@ -249,43 +206,4 @@
             {% endfor %}
         </div> <!-- Entries End -->
     </section> <!-- Journal Section End-->
-
-    <!-- footer
-    ================================================== -->
-    <footer>
-
-        <div class="row">
-
-            <div class="twelve columns">
-
-                <ul class="footer-nav">
-                    <li><a href="#">Home.</a></li>
-                    <li><a href="#">Blog.</a></li>
-                    <li><a href="#">Portfolio.</a></li>
-                    <li><a href="#">About.</a></li>
-                    <li><a href="#">Contact.</a></li>
-                    <li><a href="#">Features.</a></li>
-                </ul>
-
-                <ul class="footer-social">
-                    <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                    <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                    <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-                    <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
-                    <li><a href="#"><i class="fa fa-skype"></i></a></li>
-                    <li><a href="#"><i class="fa fa-rss"></i></a></li>
-                </ul>
-
-                <ul class="copyright">
-                    <li>Copyright &copy; 2014 Sparrow</li>
-                    <li>Design by <a href="http://www.styleshout.com/">Styleshout</a></li>
-                </ul>
-
-            </div>
-
-            <div id="go-top" style="display: block;"><a title="Back to Top" href="#">Go To Top</a></div>
-
-        </div>
-
-    </footer> <!-- Footer End-->
 {% endblock %}

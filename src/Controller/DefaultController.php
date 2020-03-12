@@ -4,8 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Attachment;
 use App\Entity\AttachmentUsage;
+use App\Entity\Comment;
 use App\Entity\Post;
+use App\Form\CommentType;
 use App\Form\PostType;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -27,17 +30,19 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/", name="default")
+     * @Route("/", name="index")
      */
     public function index()
     {
+        $user = $this->security->getUser();
         $latestPosts = $this
             ->getDoctrine()
             ->getRepository(Post::class)
             ->findBy([
             ], ['createdTime' => 'DESC'], 4);
         return $this->render('sparrow/index.html.twig', [
-            'latestPosts' => $latestPosts
+            'latestPosts' => $latestPosts,
+            'user' => $user
         ]);
     }
 
@@ -49,11 +54,12 @@ class DefaultController extends AbstractController
      */
     public function createPost(Request $request)
     {
+        $user = $this->security->getUser();
         $post = new Post();
         $post
             ->setCreatedTime(new \DateTime())
             ->setEditedTime(new \DateTime())
-            ->setUser($this->security->getUser());
+            ->setUser($user);
         $form = $this->createForm(PostType::class, $post);
 
         $form->handleRequest($request);
@@ -77,17 +83,22 @@ class DefaultController extends AbstractController
             return $this->redirectToRoute('readPost', ["id" => $task->getId()]);
         }
 
-        return $this->render('default/createPost.html.twig', [
+        return $this->render('sparrow/createPost.html.twig', [
             'createForm' => $form->createView(),
+            'user' => $user
         ]);
     }
 
     /**
      * @Route("/post/{id}", name="readPost")
      * @param Post $post
+     * @param Request $request
      * @return Response
+     * @throws Exception
      */
-    public function readPost(Post $post) {
+    public function readPost(Post $post, Request $request) {
+        $user = $this->security->getUser();
+
 
         $post->addViews(1);
         $entityManager = $this->getDoctrine()->getManager();
@@ -103,7 +114,55 @@ class DefaultController extends AbstractController
         return $this->render('sparrow/post.html.twig', [
             'post' => $post,
             'nextPost' => $nextPost,
-            'previousPost' => $previousPost
+            'previousPost' => $previousPost,
+            'user' => $user
         ]);
     }
+
+    /**
+     * @Route("/post/page/{page}", name="postPage", requirements={"page"="\d+"})
+     * @param Request $request
+     * @param int $page
+     * @return Response
+     */
+    public function browsePosts(Request $request, int $page)
+    {
+        $user = $this->security->getUser();
+
+        // get entity manager
+        $em = $this->getDoctrine()->getManager();
+
+        // get the user repository
+        $developers = $em->getRepository(Post::class);
+
+        // build the query for the doctrine paginator
+        $query = $developers->createQueryBuilder('post')
+            ->orderBy('post.createdTime', 'DESC')
+            ->getQuery();
+
+        //set page size
+        $pageSize = '10';
+
+        // load doctrine Paginator
+        $paginator = new Paginator($query);
+
+        // you can get total items
+        $totalItems = count($paginator);
+
+        // get total pages
+        $pagesCount = ceil($totalItems / $pageSize);
+
+        // now get one page's items:
+        $result = $paginator
+            ->getQuery()
+            ->setFirstResult($pageSize * ($page-1)) // set the offset
+            ->setMaxResults($pageSize)->getResult(); // set the limit
+        return $this->render('sparrow/browsePost.html.twig', [
+            'posts' => $result,
+            'pageCount' => $pagesCount,
+            'pageNumber' => $page,
+            'user' => $user
+        ]);
+    }
+
 }

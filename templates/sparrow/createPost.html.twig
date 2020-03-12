@@ -1,0 +1,112 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create post{% endblock %}
+
+{% block body %}
+    <!-- Content
+    ================================================== -->
+    <div class="content-outer">
+
+        <div id="page-content" class="row">
+
+            <div id="primary" class="eight columns">
+
+                <!-- respond -->
+                <div class="respond">
+                    <h3>Create a post</h3>
+
+                    {{ form_start(createForm) }}
+                    {{ form_row(createForm.title) }}
+                    {{ form_row(createForm.description) }}
+                    {{ form_row(createForm.content) }}
+
+                    <div class="widget widget_tag_cloud tagcloud cf">
+                        {{ form_row(createForm.tag) }}
+                        <p>Separate tags by a comma</p>
+                    </div>
+
+                    {{ form_row(createForm.image) }}
+                    <br>
+                    {{ form_row(createForm.submit) }}
+                    {{ form_end(createForm) }}
+                </div> <!-- Respond End -->
+
+            </div>  <!-- Comments End -->
+
+        </div>
+
+
+    </div>
+
+    </div> <!-- Content End-->
+
+    <!-- Tweets Section
+    ================================================== -->
+    <section id="tweets">
+
+        <div class="row">
+
+            <div class="tweeter-icon align-center">
+                <i class="fa fa-twitter"></i>
+            </div>
+
+            <ul id="twitter" class="align-center">
+                <li>
+               <span>
+               This is Photoshop's version  of Lorem Ipsum. Proin gravida nibh vel velit auctor aliquet.
+               Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum
+               <a href="#">http://t.co/CGIrdxIlI3</a>
+               </span>
+                    <b><a href="#">2 Days Ago</a></b>
+                </li>
+                <!--
+                <li>
+                   <span>
+                   This is Photoshop's version  of Lorem Ipsum. Proin gravida nibh vel velit auctor aliquet.
+                   Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum
+                   <a href="#">http://t.co/CGIrdxIlI3</a>
+                   </span>
+                   <b><a href="#">3 Days Ago</a></b>
+                </li>
+                -->
+            </ul>
+
+            <p class="align-center"><a href="#" class="button">Follow us</a></p>
+
+        </div>
+
+    </section> <!-- Tweet Section End-->
+{% endblock %}
+
+{% macro recursiveComment(comment) %}
+    <ul class="children">
+
+        <li>
+
+            <div class="avatar">
+                <img width="50" height="50" class="avatar" src="{{ vich_uploader_asset(comment.owner.profilePicture) }}"
+                     alt="">
+            </div>
+
+            <div class="comment-info">
+                <cite>{{ comment.owner.username }}</cite>
+
+                <div class="comment-meta">
+                    <time class="comment-time" datetime="{{ comment.createdTime | format_datetime('short', 'none') }}">
+                        {{ comment.createdTime | format_datetime('full', 'short') }}
+                    </time>
+                    <span class="sep">/</span><a class="reply" href="#">Reply</a>
+                </div>
+            </div>
+
+            <div class="comment-text">
+                <p>{{ comment.content }}</p>
+            </div>
+
+            {% for reply in comment.reply %}
+                {{ _self.recursiveComment(reply) }}
+            {% endfor %}
+        </li>
+
+    </ul>
+{% endmacro %}

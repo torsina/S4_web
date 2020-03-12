@@ -30,7 +30,7 @@ class AdminUserController extends EasyAdminController
         if($encodedPassword)$user->setPassword($encodedPassword);
         if(!$user->getProfilePicture()) $user->setProfilePicture($this
             ->getDoctrine()
-            ->getRepository(AttachmentUsage::class)
+            ->getRepository(Attachment::class)
             ->getDefaultUserProfilePicture());
 
         parent::persistEntity($user);

@@ -36,6 +36,22 @@ class AttachmentRepository extends ServiceEntityRepository
     }
     */
 
+    private function getByUsage(string $usage) {
+        return $this->createQueryBuilder("attachment")
+            ->join('attachment.usedAs', "attachmentUsage")
+            ->where('attachmentUsage.usedAs = :usage')
+            ->setParameter("usage", $usage)
+            ->getQuery();
+    }
+
+    public function getDefaultUserProfilePicture() {
+        $query = $this->getByUsage("user_profile_default");
+        $result = $query->setMaxResults(1)->getResult();
+        if(count($result) == 0) {
+            return null;
+        } else return $result[0];
+    }
+
     /*
     public function findOneBySomeField($value): ?Attachment
     {

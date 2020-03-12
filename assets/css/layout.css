@@ -123,12 +123,12 @@ img {
 }
 
 /* tag cloud */
-#sidebar .tagcloud {
+.tagcloud {
     margin: 18px 0 18px -12px;
     padding: 0;
 }
 
-#sidebar .tagcloud a {
+.tagcloud a, .tagcloud > div > div > span {
     font: bold 12px/24px notosans-regular, sans-serif !important;
     display: inline-block;
     float: left;
@@ -150,7 +150,7 @@ img {
     border-radius: 3px;
 }
 
-#sidebar .tagcloud a:hover {
+.tagcloud a:hover {
     color: #fff;
     background: #11ABB0;
 }
