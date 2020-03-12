@@ -1,6 +1,8 @@
 <?php
 namespace App\Controller;
 
+use App\Entity\Attachment;
+use App\Entity\AttachmentUsage;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\EasyAdminController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -26,6 +28,10 @@ class AdminUserController extends EasyAdminController
     {
         $encodedPassword = $this->encodePassword($user);
         if($encodedPassword)$user->setPassword($encodedPassword);
+        if(!$user->getProfilePicture()) $user->setProfilePicture($this
+            ->getDoctrine()
+            ->getRepository(AttachmentUsage::class)
+            ->getDefaultUserProfilePicture());
 
         parent::persistEntity($user);
     }

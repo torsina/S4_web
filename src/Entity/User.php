@@ -245,7 +245,6 @@ class User implements UserInterface
 
     public function setProfilePicture(Attachment $profilePicture): self
     {
-        if(!$profilePicture->isUsed())$profilePicture->setUsedAs("user_profile");
         $this->profilePicture = $profilePicture;
 
         return $this;

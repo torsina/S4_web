@@ -64,7 +64,7 @@ class Post
     private $views = 0;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Attachment", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Attachment", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $image;
@@ -229,7 +229,6 @@ class Post
 
     public function setImage(Attachment $image): self
     {
-        if(!$image->isUsed())$image->setUsedAs("post_image");
         $this->image = $image;
 
         return $this;

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -39,6 +41,23 @@ class Comment
      * @ORM\Column(type="text")
      */
     private $content;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Comment", inversedBy="reply")
+     * @ORM\JoinColumn(name="commentOwner", referencedColumnName="id", onDelete="SET NULL")
+     */
+    private $commentOwner;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="commentOwner")
+     *
+     */
+    private $reply;
+
+    public function __construct()
+    {
+        $this->reply = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -89,6 +108,49 @@ class Comment
     public function setContent(string $content): self
     {
         $this->content = $content;
+
+        return $this;
+    }
+
+    public function getCommentOwner(): ?self
+    {
+        return $this->commentOwner;
+    }
+
+    public function setCommentOwner(?self $commentOwner): self
+    {
+        $this->commentOwner = $commentOwner;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|self[]
+     */
+    public function getReply(): Collection
+    {
+        return $this->reply;
+    }
+
+    public function addReply(self $reply): self
+    {
+        if (!$this->reply->contains($reply)) {
+            $this->reply[] = $reply;
+            $reply->setCommentOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReply(self $reply): self
+    {
+        if ($this->reply->contains($reply)) {
+            $this->reply->removeElement($reply);
+            // set the owning side to null (unless already changed)
+            if ($reply->getCommentOwner() === $this) {
+                $reply->setCommentOwner(null);
+            }
+        }
 
         return $this;
     }

@@ -2,27 +2,52 @@ easy_admin:
   entities:
     # List the entity class name you want to manage
     Comment:
-        class: App\Entity\Comment
+      class: App\Entity\Comment
     Post:
-        class: App\Entity\Post
+      class: App\Entity\Post
+      controller: App\Controller\AdminPostController
     Tag:
-        class: App\Entity\Tag
+      class: App\Entity\Tag
     Attachment:
-        class: App\Entity\Attachment
-        list:
-          fields:
-            - { label: 'image', property: 'imageName', type: 'image', base_path: 'images/attachments' }
-        show:
-          fields:
-            - { label: 'image', property: 'imageName', type: 'image', base_path: 'images/attachments' }
-        form:
-          fields:
-            - { label: 'image', property: 'imageFile', type: 'vich_image', upload_dir: '%app.path.attachments_image%' }
+      class: App\Entity\Attachment
+      list:
+        fields:
+          - { label: 'image', property: 'imageName', type: 'image', base_path: 'images/attachments' }
+          - { property: 'usedAs' }
+      show:
+        fields:
+          - { label: 'image', property: 'imageName', type: 'image', base_path: 'images/attachments' }
+          - { property: 'usedAs' }
+      form:
+        fields:
+          - { label: 'image', property: 'imageFile', type: 'vich_image', upload_dir: '%app.path.attachments_image%' }
+          - { property: 'usedAs' }
+    AttachmentUsage:
+      class: App\Entity\AttachmentUsage
+      form:
+        fields:
+          - { property: 'usedAs' }
     User:
-        class: App\Entity\User
-        controller: App\Controller\AdminUserController
-        form:
-          fields:
-            - { property: 'username' }
-            - { label: 'password', property: 'plainPassword', type: 'password' }
+      class: App\Entity\User
+      controller: App\Controller\AdminUserController
+      list:
+        fields:
+          - { property: 'id' }
+          - { property: 'username' }
+          - { property: 'banner' }
+          - { property: 'posts' }
+          - { property: 'comments' }
+          - { property: 'profilePicture', type: 'image', base_path: 'images/attachments' }
+      show:
+        fields:
+          - { property: 'id' }
+          - { property: 'username' }
+          - { property: 'banner' }
+          - { property: 'posts' }
+          - { property: 'comments' }
+          - { property: 'profilePicture', type: 'image' }
+      form:
+        fields:
+          - { property: 'username' }
+          - { label: 'password', property: 'plainPassword', type: 'password' }
 

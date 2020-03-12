@@ -81,21 +81,14 @@
                         <h1>{{ post.title }}</h1>
 
                         <p class="post-meta">
-
-                            <time class="date" datetime="{{ post.createdTime | format_datetime('short', 'none') }}">{{ post.createdTime | format_datetime('full', 'short') }}</time>
-
-                            <span class="categories">
-                                {% for tag in post.tag %}
-                                    / <a href="#">{{tag.name}}</a>
-                                {% endfor %}
-                     </span>
-
+                            <time class="date"
+                                  datetime="{{ post.createdTime | format_datetime('short', 'none') }}">{{ post.createdTime | format_datetime('full', 'short') }}</time>
                         </p>
 
                     </div>
 
                     <div class="post-thumb">
-                        <img src="{{vich_uploader_asset(post.image)}}" alt="post-image" title="post-image">
+                        <img src="{{ vich_uploader_asset(post.image) }}" alt="post-image" title="post-image">
                     </div>
 
                     <div class="post-content">
@@ -114,25 +107,28 @@
                         <div class="bio cf">
 
                             <div class="gravatar">
-                                <img src="images/author-img.png" alt="">
+                                <img src="{{ vich_uploader_asset(post.user.profilePicture) }}" alt="">
                             </div>
                             <div class="about">
                                 <h5><a title="Posts by John Doe" href="#" rel="author">John Doe</a></h5>
-                                <p>Jon Doe is lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis sem
-                                    nibh id elit. Duis sed odio sit amet nibh vulputate
-                                    cursus a sit amet mauris. Morbi accumsan ipsum velit. Duis sed odio sit amet nibh
-                                    vulputate
-                                    <a href="#">cursus</a> a sit <a href="#">amet mauris</a>. Morbi elit consequat
-                                    ipsum.</p>
+                                <p>{{ post.user.banner }}</p>
                             </div>
 
                         </div>
 
                         <ul class="post-nav cf">
-                            <li class="prev"><a rel="prev" href="#"><strong>Previous Article</strong> Duis Sed Odio Sit
-                                    Amet Nibh Vulputate</a></li>
-                            <li class="next"><a rel="next" href="#"><strong>Next Article</strong> Morbi Elit Consequat
-                                    Ipsum</a></li>
+                            <li class="prev">
+                                <a rel="prev" href="{{ path('readPost', {id: previousPost.id }) }}">
+                                    <strong>Previous Article</strong>
+                                    {{ previousPost.title }}
+                                </a>
+                            </li>
+                            <li class="next">
+                                <a rel="next" href="{{ path('readPost', {id: nextPost.id }) }}">
+                                    <strong>Next Article</strong>
+                                    {{ nextPost.title }}
+                                </a>
+                            </li>
                         </ul>
 
                     </div>
@@ -143,17 +139,44 @@
                 ================================================== -->
                 <div id="comments">
 
-                    <h3>5 Comments</h3>
+                    <h3>{{ post.comments | length }} Comments</h3>
 
                     <!-- commentlist -->
                     <ol class="commentlist">
+                        {% for comment in post.comments %}
+                            {% if not comment.commentOwner %}
+                                <li>
 
-                        <li class="depth-1">
+                                    <div class="avatar">
+                                        <img width="50" height="50" class="avatar" src="{{ vich_uploader_asset(comment.owner.profilePicture) }}"
+                                             alt="">
+                                    </div>
 
+                                    <div class="comment-info">
+                                        <cite>{{ comment.owner.username }}</cite>
+
+                                        <div class="comment-meta">
+                                            <time class="comment-time" datetime="{{ comment.createdTime | format_datetime('short', 'none') }}">
+                                                {{ comment.createdTime | format_datetime('full', 'short') }}
+                                            </time>
+                                            <span class="sep">/</span><a class="reply" href="#">Reply</a>
+                                        </div>
+                                    </div>
+
+                                    <div class="comment-text">
+                                        <p>{{ comment.content }}</p>
+                                    </div>
+
+                                    {% for reply in comment.reply %}
+                                        {{ _self.recursiveComment(reply) }}
+                                    {% endfor %}
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        <li>
                             <div class="avatar">
                                 <img width="50" height="50" class="avatar" src="images/user-01.png" alt="">
                             </div>
-
                             <div class="comment-info">
                                 <cite>Itachi Uchiha</cite>
 
@@ -162,7 +185,6 @@
                                     <span class="sep">/</span><a class="reply" href="#">Reply</a>
                                 </div>
                             </div>
-
                             <div class="comment-text">
                                 <p>Adhuc quaerendum est ne, vis ut harum tantas noluisse, id suas iisque mei. Nec te
                                     inani ponderum vulputate,
@@ -171,115 +193,6 @@
                             </div>
 
                         </li>
-
-                        <li class="thread-alt depth-1">
-
-                            <div class="avatar">
-                                <img width="50" height="50" class="avatar" src="images/user-03.png" alt="">
-                            </div>
-
-                            <div class="comment-info">
-                                <cite>John Doe</cite>
-
-                                <div class="comment-meta">
-                                    <time class="comment-time" datetime="2014-01-14T24:05">Jan 14, 2013 @ 24:05</time>
-                                    <span class="sep">/</span><a class="reply" href="#">Reply</a>
-                                </div>
-                            </div>
-
-                            <div class="comment-text">
-                                <p>Sumo euismod dissentiunt ne sit, ad eos iudico qualisque adversarium, tota falli et
-                                    mei. Esse euismod
-                                    urbanitas ut sed, et duo scaevola pericula splendide. Primis veritus contentiones
-                                    nec ad, nec et
-                                    tantas semper delicatissimi.</p>
-                            </div>
-
-                            <ul class="children">
-
-                                <li class="depth-2">
-
-                                    <div class="avatar">
-                                        <img width="50" height="50" class="avatar" src="images/user-03.png" alt="">
-                                    </div>
-
-                                    <div class="comment-info">
-                                        <cite>Kakashi Hatake</cite>
-
-                                        <div class="comment-meta">
-                                            <time class="comment-time" datetime="2014-01-14T25:05">Jan 14, 2013 @
-                                                25:05
-                                            </time>
-                                            <span class="sep">/</span><a class="reply" href="#">Reply</a>
-                                        </div>
-                                    </div>
-
-                                    <div class="comment-text">
-                                        <p>Duis sed odio sit amet nibh vulputate
-                                            cursus a sit amet mauris. Morbi accumsan ipsum velit. Duis sed odio sit amet
-                                            nibh vulputate
-                                            cursus a sit amet mauris</p>
-                                    </div>
-
-                                    <ul class="children">
-
-                                        <li class="depth-3">
-
-                                            <div class="avatar">
-                                                <img width="50" height="50" class="avatar" src="images/user-03.png"
-                                                     alt="">
-                                            </div>
-
-                                            <div class="comment-info">
-                                                <cite>John Doe</cite>
-
-                                                <div class="comment-meta">
-                                                    <time class="comment-time" datetime="2014-01-14T25:15">Jan 14, 2013
-                                                        @ 25:15
-                                                    </time>
-                                                    <span class="sep">/</span><a class="reply" href="#">Reply</a>
-                                                </div>
-                                            </div>
-
-                                            <div class="comment-text">
-                                                <p>Investigationes demonstraverunt lectores legere me lius quod ii
-                                                    legunt saepius. Claritas est
-                                                    etiam processus dynamicus, qui sequitur mutationem consuetudium
-                                                    lectorum.</p>
-                                            </div>
-
-                                        </li>
-
-                                    </ul>
-
-                                </li>
-
-                            </ul>
-
-                        </li>
-
-                        <li class="depth-1">
-
-                            <div class="avatar">
-                                <img width="50" height="50" class="avatar" src="images/user-02.png" alt="">
-                            </div>
-
-                            <div class="comment-info">
-                                <cite>Hinata Hyuga</cite>
-
-                                <div class="comment-meta">
-                                    <time class="comment-time" datetime="2014-01-14T25:15">Jan 14, 2013 @ 25:15</time>
-                                    <span class="sep">/</span><a class="reply" href="#">Reply</a>
-                                </div>
-                            </div>
-
-                            <div class="comment-text">
-                                <p>Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum
-                                    claritatem.</p>
-                            </div>
-
-                        </li>
-
                     </ol> <!-- Commentlist End -->
 
 
@@ -340,26 +253,12 @@
                         </form>
                     </div>
 
-                    <div class="widget widget_categories">
-                        <h5 class="widget-title">Categories</h5>
-                        <ul class="link-list cf">
-                            <li><a href="#">Designs</a></li>
-                            <li><a href="#">Internet</a></li>
-                            <li><a href="#">Typography</a></li>
-                            <li><a href="#">Photography</a></li>
-                            <li><a href="#">Web Development</a></li>
-                            <li><a href="#">Projects</a></li>
-                            <li><a href="#">Other Stuff</a></li>
-                        </ul>
-                    </div>
-
                     <div class="widget widget_tag_cloud">
                         <h5 class="widget-title">Tags</h5>
                         <div class="tagcloud cf">
-                            <a href="#">drupal</a>
-                            <a href="#">joomla</a>
-                            <a href="#">ghost</a>
-                            <a href="#">wordpress</a>
+                            {% for tag in post.tag %}
+                                <a href="#">{{ tag.name }}</a>
+                            {% endfor %}
                         </div>
                     </div>
 
@@ -447,3 +346,36 @@
 
     </footer> <!-- Footer End-->
 {% endblock %}
+
+{% macro recursiveComment(comment) %}
+    <ul class="children">
+
+        <li>
+
+            <div class="avatar">
+                <img width="50" height="50" class="avatar" src="{{ vich_uploader_asset(comment.owner.profilePicture) }}"
+                     alt="">
+            </div>
+
+            <div class="comment-info">
+                <cite>{{ comment.owner.username }}</cite>
+
+                <div class="comment-meta">
+                    <time class="comment-time" datetime="{{ comment.createdTime | format_datetime('short', 'none') }}">
+                        {{ comment.createdTime | format_datetime('full', 'short') }}
+                    </time>
+                    <span class="sep">/</span><a class="reply" href="#">Reply</a>
+                </div>
+            </div>
+
+            <div class="comment-text">
+                <p>{{ comment.content }}</p>
+            </div>
+
+            {% for reply in comment.reply %}
+                {{ _self.recursiveComment(reply) }}
+            {% endfor %}
+        </li>
+
+    </ul>
+{% endmacro %}

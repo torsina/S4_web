@@ -36,6 +36,38 @@ class PostRepository extends ServiceEntityRepository
     }
     */
 
+    public function getNextByCreatedDate(Post $post): Post
+    {
+        $result = $this->createQueryBuilder('p')
+            ->andWhere('p.createdTime > :datetime')
+            ->setParameter('datetime', $post->getCreatedTime())
+            ->orderBy('p.createdTime', 'ASC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult();
+        if(count($result) == 0) {
+            return $post;
+        } else {
+            return $result[0];
+        }
+    }
+
+    public function getPreviousByCreatedDate(Post $post): Post
+    {
+        $result = $this->createQueryBuilder('p')
+            ->andWhere('p.createdTime < :datetime')
+            ->setParameter('datetime', $post->getCreatedTime())
+            ->orderBy('p.createdTime', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult();
+        if(count($result) == 0) {
+            return $post;
+        } else {
+            return $result[0];
+        }
+    }
+
     /*
     public function findOneBySomeField($value): ?Post
     {

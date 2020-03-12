@@ -24,12 +24,13 @@ class Attachment
         return $this->id;
     }
 
-    public function __construct(File $file)
+    public function setup(File $file)
     {
         try {
             $this->setImageFile($file);
             $this->setImageName($file->getFilename());
             $this->setImageSize($file->getSize());
+
         } catch (\Exception $e) {
         }
     }
@@ -65,9 +66,12 @@ class Attachment
     private $updatedAt;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="App\Entity\AttachmentUsage", inversedBy="attachments")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $usedAs;
+
+
 
     /**
      * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
@@ -129,19 +133,15 @@ class Attachment
         return $this->getImageName();
     }
 
-    public function getUsedAs(): ?string
+    public function getUsedAs(): ?AttachmentUsage
     {
         return $this->usedAs;
     }
 
-    public function setUsedAs(string $usedAs): self
+    public function setUsedAs(?AttachmentUsage $usedAs): self
     {
         $this->usedAs = $usedAs;
 
         return $this;
-    }
-
-    public function isUsed(): bool {
-        return !($this->usedAs == "" || $this->usedAs == null);
     }
 }
