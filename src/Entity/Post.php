@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\File\File;
@@ -74,10 +75,17 @@ class Post
      */
     private $description;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Upvote", mappedBy="post", orphanRemoval=true)
+     * @ApiSubresource
+     */
+    private $upvotes;
+
     public function __construct()
     {
         $this->tag = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->upvotes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -247,6 +255,37 @@ class Post
     public function setDescription(string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Upvote[]
+     */
+    public function getUpvotes(): Collection
+    {
+        return $this->upvotes;
+    }
+
+    public function addUpvote(Upvote $upvote): self
+    {
+        if (!$this->upvotes->contains($upvote)) {
+            $this->upvotes[] = $upvote;
+            $upvote->setPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUpvote(Upvote $upvote): self
+    {
+        if ($this->upvotes->contains($upvote)) {
+            $this->upvotes->removeElement($upvote);
+            // set the owning side to null (unless already changed)
+            if ($upvote->getPost() === $this) {
+                $upvote->setPost(null);
+            }
+        }
 
         return $this;
     }

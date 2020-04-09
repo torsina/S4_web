@@ -6,6 +6,8 @@ use App\Entity\Attachment;
 use App\Entity\AttachmentUsage;
 use App\Entity\Comment;
 use App\Entity\Post;
+use App\Entity\Tag;
+use App\Entity\Upvote;
 use App\Form\CommentType;
 use App\Form\PostType;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -34,6 +36,7 @@ class DefaultController extends AbstractController
      */
     public function index()
     {
+
         $user = $this->security->getUser();
         $latestPosts = $this
             ->getDoctrine()
@@ -44,10 +47,12 @@ class DefaultController extends AbstractController
             'latestPosts' => $latestPosts,
             'user' => $user
         ]);
+
+        //return $this->render('vue.twig');
     }
 
     /**
-     * @Route("/post/create", name="createPost")
+     * @Route("/post/create", name="createPost", methods={"GET"})
      * @param Request $request
      * @return RedirectResponse|Response
      * @throws Exception
@@ -80,13 +85,71 @@ class DefaultController extends AbstractController
             $entityManager->persist($task);
             $entityManager->flush();
 
-            return $this->redirectToRoute('readPost', ["id" => $task->getId()]);
+            //return $this->redirectToRoute('readPost', ["id" => $task->getId()]);
         }
 
         return $this->render('sparrow/createPost.html.twig', [
             'createForm' => $form->createView(),
             'user' => $user
         ]);
+    }
+
+    /**
+     * @Route("/post/create", name="uplaodPost", methods={"POST"})
+     * @param Request $request
+     * @throws Exception
+     */
+    public function uploadPost(Request $request) {
+        $user = $this->security->getUser();
+        $post = new Post();
+        $post
+            ->setCreatedTime(new \DateTime())
+            ->setEditedTime(new \DateTime())
+            ->setUser($user);
+
+        $title = $request->request->get("title");
+        $description = $request->request->get("description");
+        $content = $request->request->get("content");
+        $rawTags = $request->request->get('tags');
+
+        $image = $request->files->get("image");
+
+        $attachment = new Attachment();
+        //$attachment->setImageFile($image);
+        $attachment->setup($image);
+        $attachment->setUsedAs($this->getDoctrine()->getRepository(AttachmentUsage::class)->getPost());
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $post = new Post();
+        $post
+            ->setUser($user)
+            ->setImage($attachment)
+            ->setCreatedTime(new \DateTimeImmutable())
+            ->setEditedTime(new \DateTimeImmutable())
+            ->setTitle($title)
+            ->setDescription($description)
+            ->setContent($content);
+        $tagNames =
+            array_unique(
+                array_filter(
+                    array_map('trim', explode(",", $rawTags))));
+        $tags = $this->getDoctrine()->getRepository(Tag::class)->findBy(["name" => $tagNames]);
+        $newNames = array_diff($tagNames, $tags);
+
+
+        foreach ($newNames as $name) {
+            $tag = new Tag();
+            $tag->setName($name);
+            $entityManager->persist($tag);
+            $tags[] = $tag;
+        }
+        foreach($tags as $tag) {
+            $post->addTag($tag);
+        }
+        $entityManager->persist($attachment);
+        $entityManager->persist($post);
+        $entityManager->flush();
+        return $this->json(["id" => $post->getId()]);
     }
 
     /**
@@ -111,10 +174,13 @@ class DefaultController extends AbstractController
 
         $nextPost = $postRepository->getNextByCreatedDate($post);
         $previousPost = $postRepository->getPreviousByCreatedDate($post);
+
+        $upvotes = $this->getDoctrine()->getRepository(Upvote::class)->getUpvotes($post->getId());
         return $this->render('sparrow/post.html.twig', [
             'post' => $post,
             'nextPost' => $nextPost,
             'previousPost' => $previousPost,
+            'upvotes' => $upvotes,
             'user' => $user
         ]);
     }

@@ -1,25 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
-            {{ encore_entry_link_tags('vue') }}
         {% endblock %}
     </head>
     <body>
-        {{ include('header.html.twig') }}
         <div id="app">
-            {% block body %}{% endblock %}
-
-
         </div>
-        {{ include('footer.html.twig') }}
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
-            {{ encore_entry_script_tags('vue') }}
         {% endblock %}
     </body>
 </html>

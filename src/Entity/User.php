@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -73,10 +74,17 @@ class User implements UserInterface
      */
     private $profilePicture;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Upvote", mappedBy="user", orphanRemoval=true)
+     * @ApiSubresource
+     */
+    private $upvotes;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->upvotes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -255,6 +263,37 @@ class User implements UserInterface
     public function setProfilePicture(Attachment $profilePicture): self
     {
         $this->profilePicture = $profilePicture;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Upvote[]
+     */
+    public function getUpvotes(): Collection
+    {
+        return $this->upvotes;
+    }
+
+    public function addUpvote(Upvote $upvote): self
+    {
+        if (!$this->upvotes->contains($upvote)) {
+            $this->upvotes[] = $upvote;
+            $upvote->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUpvote(Upvote $upvote): self
+    {
+        if ($this->upvotes->contains($upvote)) {
+            $this->upvotes->removeElement($upvote);
+            // set the owning side to null (unless already changed)
+            if ($upvote->getUser() === $this) {
+                $upvote->setUser(null);
+            }
+        }
 
         return $this;
     }

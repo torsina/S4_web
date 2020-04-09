@@ -75,7 +75,6 @@
     <!-- Info Section
     ================================================== -->
     <section id="info">
-
         <div class="row">
 
             <div class="bgrid-quarters s-bgrid-halves">
@@ -178,6 +177,7 @@
                                         {{ post.createdTime | format_datetime('full', 'short') }}
                                     </time>
                                     <span class="dauthor">By {{ post.user.username }}</span>
+                                    <post-vote-count :post="{{ post.id }}"></post-vote-count>
                                 </p>
                             </div>
                         </div>

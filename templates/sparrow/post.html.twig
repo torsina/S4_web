@@ -21,6 +21,13 @@
                         <p class="post-meta">
                             <time class="date"
                                   datetime="{{ post.createdTime | format_datetime('short', 'none') }}">{{ post.createdTime | format_datetime('full', 'short') }}</time>
+                            {% if is_granted('ROLE_USER') %}
+                                <post-like-button v-bind:post="{{ post.id }}" v-bind:enabled="true"></post-like-button>
+                            {% else %}
+                                <post-like-button v-bind:post="{{ post.id }}" v-bind:enabled="false"></post-like-button>
+                            {% endif %}
+
+
                         </p>
 
                     </div>
@@ -86,10 +93,10 @@
                                 <li>
 
                                     <div class="avatar">
+
                                         <img width="50" height="50" class="avatar" src="{{ vich_uploader_asset(comment.owner.profilePicture) }}"
                                              alt="">
                                     </div>
-
                                     <div class="comment-info">
                                         <cite>{{ comment.owner.username }}</cite>
 

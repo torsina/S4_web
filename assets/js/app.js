@@ -11,7 +11,6 @@
 let $ = require('jquery');
 // jankiness cuz jquery plugins don't know what code standards are
 window.jQuery = $;
-require("bootstrap-tagsinput");
 require('flexslider');
 
 require('./doubletaptogo');
@@ -33,5 +32,3 @@ import '../css/global.scss';
 
 
 console.log('Hello Webpack Encore! Edit me in assets/js/app.js');
-
-$('.tag-input').tagsinput();

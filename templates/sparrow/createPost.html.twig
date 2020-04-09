@@ -13,6 +13,7 @@
 
                 <!-- respond -->
                 <div class="respond">
+                    <!--
                     <h3>Create a post</h3>
 
                     {{ form_start(createForm) }}
@@ -21,14 +22,15 @@
                     {{ form_row(createForm.content) }}
 
                     <div class="widget widget_tag_cloud tagcloud cf">
-                        {{ form_row(createForm.tag) }}
-                        <p>Separate tags by a comma</p>
+                        <form-tag-input></form-tag-input>
                     </div>
 
                     {{ form_row(createForm.image) }}
                     <br>
                     {{ form_row(createForm.submit) }}
                     {{ form_end(createForm) }}
+                    -->
+                    <post-create-form></post-create-form>
                 </div> <!-- Respond End -->
 
             </div>  <!-- Comments End -->
@@ -37,8 +39,6 @@
 
 
     </div>
-
-    </div> <!-- Content End-->
 
 {% endblock %}
 

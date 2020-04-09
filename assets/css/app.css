@@ -14,3 +14,7 @@ span.tag.label.label-info > span {
 .my-container {
     padding: 0 25vw;
 }
+
+.app-fix > div {
+    min-height: 1vh !important;
+}

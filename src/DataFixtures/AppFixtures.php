@@ -7,6 +7,7 @@ use App\Entity\AttachmentUsage;
 use App\Entity\Comment;
 use App\Entity\Post;
 use App\Entity\Tag;
+use App\Entity\Upvote;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -55,7 +56,7 @@ class AppFixtures extends Fixture
         $manager->persist($user);
 
         $tags = [];
-        for($i = 0; $i < 10; $i++) {
+        for($i = 0; $i < 100; $i++) {
             $tag = new Tag();
             $tag->setName($i);
             $manager->persist($tag);
@@ -113,6 +114,7 @@ class AppFixtures extends Fixture
             $posts[] = $post;
             for ($j = $i; $j < 10; $j++) {
                 $post->addTag($tags[$j]);
+
             }
             $manager->persist($post);
             sleep(1);
@@ -122,7 +124,25 @@ class AppFixtures extends Fixture
             $manager->persist($comment);
         }
 
+        for($k = 0; $k < 10; $k++) {
+            $tempUser = new User();
+            $tempUser->setUsername($k);
+            $tempUser->setPassword($this->encoder->encodePassword($tempUser, $k));
+            $tempUser->setRoles(["ROLE_USER"]);
+            $tempUser->setProfilePicture($userDefaultAttachment);
+            $tempUser->setBanner("\"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
+            $manager->persist($tempUser);
+
+            $tempUpvote = new Upvote();
+            $tempUpvote->setPost($posts[0]);
+            $tempUpvote->setDirection(true);
+            $tempUpvote->setUser($tempUser);
+            $manager->persist($tempUpvote);
+        }
+
         $manager->flush();
+
+
     }
 
     public function uploadAttachment(string $srcFolder, string $filename, AttachmentUsage $usedAs): Attachment
