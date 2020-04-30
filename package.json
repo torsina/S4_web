@@ -25,7 +25,7 @@
         "axios": "^0.19.2",
         "bootstrap": "^4.4.1",
         "flexslider": "^2.7.2",
-        "jquery": "^3.4.1",
+        "jquery": "^3.5.0",
         "material-design-icons-iconfont": "^5.0.1",
         "popper.js": "^1.16.1",
         "vue": "^2.6.10",
